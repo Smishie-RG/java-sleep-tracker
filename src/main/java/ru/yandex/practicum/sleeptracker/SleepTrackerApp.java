@@ -60,10 +60,12 @@ public class SleepTrackerApp {
     }
 
     public List<SleepingSession> loadSleepData(String filePath) throws IOException {
-        return Files.lines(Paths.get(filePath))
-                .filter(line -> !line.trim().isEmpty())
-                .map(this::parseSleepSession)
-                .collect(Collectors.toList());
+        try (var lines = Files.lines(Paths.get(filePath))) {
+            return lines
+                    .filter(line -> !line.trim().isEmpty())
+                    .map(this::parseSleepSession)
+                    .collect(Collectors.toList());
+        }
     }
 
     private SleepingSession parseSleepSession(String line) {

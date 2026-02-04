@@ -45,8 +45,12 @@ public class ChronoTypeFunction implements Function<List<SleepingSession>, Sleep
         LocalTime sleepTime = session.getSleepStartTime();
         LocalTime wakeTime = session.getSleepEndTime();
 
-        if (!sleepTime.isBefore(OWL_SLEEP) && wakeTime.isAfter(OWL_WAKE)) return ChronoType.OWL;
-        if (sleepTime.isBefore(LARK_SLEEP) && wakeTime.isBefore(LARK_WAKE)) return ChronoType.LARK;
+        if (sleepTime.isAfter(OWL_SLEEP) && wakeTime.isAfter(OWL_WAKE)) {
+            return ChronoType.OWL;
+        }
+        if (sleepTime.isBefore(LARK_SLEEP) && wakeTime.isBefore(LARK_WAKE)) {
+            return ChronoType.LARK;
+        }
         return ChronoType.DOVE;
     }
 

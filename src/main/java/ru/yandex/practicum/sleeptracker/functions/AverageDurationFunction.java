@@ -18,7 +18,7 @@ public class AverageDurationFunction implements Function<List<SleepingSession>, 
 
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();
         symbols.setDecimalSeparator('.');
-        DecimalFormat df = new DecimalFormat("0", symbols);
+        DecimalFormat df = new DecimalFormat("0.0", symbols);
 
         return new SleepAnalysisResult("Средняя продолжительность сессии (минуты)", df.format(avg));
     }

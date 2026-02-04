@@ -80,7 +80,7 @@ public class SleepTrackerAppTest {
                 SleepQuality.NORMAL));
         AverageDurationFunction function = new AverageDurationFunction();
         SleepAnalysisResult result = function.apply(sessions);
-        assertEquals("480", result.getValue());
+        assertEquals("480.0", result.getValue());
     }
 
     @Test
@@ -91,7 +91,7 @@ public class SleepTrackerAppTest {
                 SleepQuality.GOOD));
         AverageDurationFunction function = new AverageDurationFunction();
         SleepAnalysisResult result = function.apply(sessions);
-        assertEquals("360", result.getValue());
+        assertEquals("360.0", result.getValue());
     }
 
     @Test
@@ -122,9 +122,11 @@ public class SleepTrackerAppTest {
         sessions.add(new SleepingSession(LocalDateTime.of(2025,10,1,23,30),
                 LocalDateTime.of(2025,10,2,10,0),
                 SleepQuality.GOOD));
-        sessions.add(new SleepingSession(LocalDateTime.of(2025,10,2,23,0),
-                LocalDateTime.of(2025,10,3,9,30),
-                SleepQuality.NORMAL));
+        sessions.add(new SleepingSession(
+                LocalDateTime.of(2025, 10, 2, 23, 1),
+                LocalDateTime.of(2025, 10, 3, 9, 30),
+                SleepQuality.NORMAL
+        ));
         ChronoTypeFunction function = new ChronoTypeFunction();
         SleepAnalysisResult result = function.apply(sessions);
         assertEquals(ChronoType.OWL, result.getValue());
@@ -259,5 +261,25 @@ public class SleepTrackerAppTest {
         SleepAnalysisResult result = function.apply(sessions);
 
         assertEquals(0L, result.getValue(), "Не должно быть бессонных ночей при многодневном сне");
+    }
+
+    @Test
+    public void testAverageDuration_FractionalValue() {
+        List<SleepingSession> sessions = new ArrayList<>();
+        sessions.add(new SleepingSession(
+                LocalDateTime.of(2025, 10, 1, 10, 0),
+                LocalDateTime.of(2025, 10, 1, 10, 1),
+                SleepQuality.GOOD
+        ));
+        sessions.add(new SleepingSession(
+                LocalDateTime.of(2025, 10, 1, 11, 0),
+                LocalDateTime.of(2025, 10, 1, 11, 2),
+                SleepQuality.GOOD
+        ));
+
+        AverageDurationFunction function = new AverageDurationFunction();
+        SleepAnalysisResult result = function.apply(sessions);
+
+        assertEquals("1.5", result.getValue(), "Среднее значение должно быть дробным");
     }
 }
